@@ -1,0 +1,62 @@
+<beans:beans
+	xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/security
+		http://www.springframework.org/schema/security/spring-security.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- This is for scanning the packages before the app starts up because 
+		this file will get read before any other configuration file so this file 
+		can be the dataSource bean in the HibernateConfig File -->
+	<context:component-scan
+		base-package="com.alpha.practice.digimallbackend" />
+	<!-- Password Encoder Bcrypt -->
+	<beans:bean id="passwordEncoder"
+		class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
+
+	<!-- Security for none in the resources for styling -->
+	<http pattern="/resources/**" security="none" />
+
+	<!-- This matches and restricts url based on the user role -->
+	<!-- pattern /aa/** means /aa/adsd/adsfa -->
+	<!-- pattern /aa/* means /aa/ee or /aa/whatever -->
+	<http>
+		<!-- Only admin access -->
+		<intercept-url pattern="/manage/**"
+			access="hasAuthority('ADMIN')" />
+		<!-- Only registered user access -->
+		<intercept-url pattern="/cart/**"
+			access="hasAuthority('USER')" />
+		<!-- Only all access -->
+		<intercept-url pattern="/**" access="permitAll" />
+		<form-login login-page="/login" />
+		<!-- manage when idiots try to enter where they are not permitted to enter -->
+		<access-denied-handler
+			error-page="/access-denied" />
+
+	</http>
+
+	<authentication-manager>
+		<!-- This is for hard input user name and password, it should be replaced 
+			by the jdbc user service for database -->
+		<authentication-provider>
+			<!-- <user-service> <user name="jimi" password="jimi" authorities="ROLE_USER, 
+				ROLE_ADMIN" /> <user name="user" password="user" authorities="ROLE_USER" 
+				/> <user name="admin" password="admin" authorities="ROLE_ADMIN" /> </user-service> -->
+			<!-- Telling The authentication provider that you'll be using crypting 
+				mechanism -->
+			<password-encoder hash="bcrypt"
+				ref="passwordEncoder" />
+			<jdbc-user-service data-source-ref="dataSource"
+				users-by-username-query="select email, password, enabled from user_detail where email= ?"
+				authorities-by-username-query="select email, role from user_detail where email = ?" />
+		</authentication-provider>
+
+	</authentication-manager>
+
+</beans:beans>

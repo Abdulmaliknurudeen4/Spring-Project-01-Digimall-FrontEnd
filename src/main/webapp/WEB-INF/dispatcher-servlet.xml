@@ -1,0 +1,83 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:wf="http://www.springframework.org/schema/webflow-config"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context.xsd
+	http://www.springframework.org/schema/mvc
+	http://www.springframework.org/schema/mvc/spring-mvc.xsd
+	http://www.springframework.org/schema/webflow-config
+	http://www.springframework.org/schema/webflow-config/spring-webflow-config.xsd">
+	<!-- this upper properties help find other components with the autoscan 
+		of spring -->
+	<context:component-scan
+		base-package="com.alpha.practice.digimall"></context:component-scan>
+	
+
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/views/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+	<!-- Id must be multipartResolver because spring looks for it that way -->
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.support.StandardServletMultipartResolver" />
+
+	<!-- Loading static resources -->
+	<mvc:annotation-driven />
+	<mvc:resources location="/assets/"
+		mapping="/resources/**"></mvc:resources>
+
+	<!-- WEB FLOW config -->
+	<wf:flow-executor id="flowExecutor"
+		flow-registry="flowRegistry"></wf:flow-executor>
+	<wf:flow-registry id="flowRegistry"
+		base-path="/WEB-INF/views/flows"
+		flow-builder-services="flowBuilderServices">
+		<!-- Id is generated automatically by the folder name indicated by the 
+			** in the value of the pattern -->
+
+		<!-- <wf:flow-location path="patht" id=""></wf:flow-location> OR YOU COULD 
+			USE THIS INSTEAD OF THE PATTERN -->
+
+		<wf:flow-location-pattern
+			value="/**/*-flow.xml" />
+	</wf:flow-registry>
+
+	<!-- flowBuilderServices for resolving the views of the page, containing 
+		the validator property for validation dring flow in Register -->
+
+	<wf:flow-builder-services
+		id="flowBuilderServices" view-factory-creator="viewFactoryCreator"
+		validator="validator" />
+	<!-- Flow Handler Adapter -->
+	<bean
+		class="org.springframework.webflow.mvc.servlet.FlowHandlerAdapter">
+		<property name="flowExecutor" ref="flowExecutor"></property>
+	</bean>
+	<!-- Flow Handler Mapping -->
+	<bean
+		class="org.springframework.webflow.mvc.servlet.FlowHandlerMapping">
+		<property name="flowRegistry" ref="flowRegistry"></property>
+		<!-- Make Sure Preference is given to the FlwoHamderlMappings before the 
+			other servelet url, that is if the flowHandler and a given Controller have 
+			same url, it is the flow that will be triggered -->
+		<property name="order" value="-1"></property>
+	</bean>
+	<!-- View factory creator -->
+	<bean id="viewFactoryCreator"
+		class="org.springframework.webflow.mvc.builder.MvcViewFactoryCreator">
+		<property name="viewResolvers">
+			<list>
+				<ref bean="viewResolver"></ref>
+			</list>
+		</property>
+	</bean>
+	<!-- Validator Bean for Flow validation -->
+	<bean id="validator"
+		class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
+
+</beans>
