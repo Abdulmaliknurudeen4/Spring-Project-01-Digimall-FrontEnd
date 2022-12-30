@@ -20,19 +20,20 @@
 		<maven.compiler.target>1.7</maven.compiler.target>
 		<javaee.version>7.0</javaee.version>
 		<spring.version>4.3.6.RELEASE</spring.version>
+		<!-- <spring.version>5.2.22.RELEASE</spring.version> -->
 		<spring.security.version>4.2.2.RELEASE</spring.security.version>
 	</properties>
 
 	<dependencies>
-	
-	<!-- Link backend project -->
-	<dependency>
-	<groupId>com.alpha.practice</groupId>
-	<artifactId>digimallbackend</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	</dependency>
-	
-	
+
+		<!-- Link backend project -->
+		<dependency>
+			<groupId>com.alpha.practice</groupId>
+			<artifactId>digimallbackend</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+
+
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -52,7 +53,7 @@
 			<artifactId>spring-core</artifactId>
 			<version>${spring.version}</version>
 			<exclusions>
-			<!-- Excluding Commons Logging facility for slf4j -->
+				<!-- Excluding Commons Logging facility for slf4j -->
 				<exclusion>
 					<groupId>commons-logging</groupId>
 					<artifactId>commons-logging</artifactId>
@@ -65,7 +66,7 @@
 			<artifactId>spring-webmvc</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
@@ -80,20 +81,28 @@
 			<version>1.2</version>
 		</dependency>
 
-		<!-- Spring Webflow  for web page based navigation -->
-	    <dependency>
-	        <groupId>org.springframework.webflow</groupId>
-	        <artifactId>spring-webflow</artifactId>
-	        <version>2.4.4.RELEASE</version>
-	    </dependency>
-	    
-	    <!-- Spring Security  for accessing webpages-->
+		<!-- Spring Webflow for web page based navigation -->
+		<dependency>
+			<groupId>org.springframework.webflow</groupId>
+			<artifactId>spring-webflow</artifactId>
+			<version>2.4.4.RELEASE</version>
+		</dependency>
+
+		<!-- Spring Security for accessing webpages -->
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-config</artifactId>
 			<version>${spring.security.version}</version>
 		</dependency>
-		
+
+		<!-- https://mvnrepository.com/artifact/org.hibernate.common/hibernate-commons-annotations -->
+		<dependency>
+			<groupId>org.hibernate.common</groupId>
+			<artifactId>hibernate-commons-annotations</artifactId>
+			<version>5.1.2.Final</version>
+		</dependency>
+
+
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-web</artifactId>
@@ -105,7 +114,18 @@
 			<artifactId>spring-security-taglibs</artifactId>
 			<version>${spring.security.version}</version>
 		</dependency>
-	    
+
+		<!-- <dependency> <groupId>javax.xml.bind</groupId> <artifactId>jaxb-api</artifactId> 
+			<version>2.3.1</version> </dependency> -->
+
+		<!-- https://mvnrepository.com/artifact/javax.xml.ws/jaxws-api -->
+		<dependency>
+			<groupId>javax.xml.ws</groupId>
+			<artifactId>jaxws-api</artifactId>
+			<version>2.2.6</version>
+		</dependency>
+
+
 
 	</dependencies>
 
@@ -127,8 +147,8 @@
 					<artifactId>maven-compiler-plugin</artifactId>
 					<version>3.8.0</version>
 					<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
+						<source>1.8</source>
+						<target>1.8</target>
 					</configuration>
 				</plugin>
 				<plugin>
